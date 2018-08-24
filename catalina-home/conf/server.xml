@@ -33,6 +33,7 @@
 
   <!-- Global JNDI resources
        Documentation at /docs/jndi-resources-howto.html
+	   全局命名资源
   -->
   <GlobalNamingResources>
     <!-- Editable user database that can also be used by
