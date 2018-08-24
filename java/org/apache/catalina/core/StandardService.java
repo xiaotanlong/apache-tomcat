@@ -545,12 +545,12 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     protected void initInternal() throws LifecycleException {
 
         super.initInternal();
-
+        //只能有一个container
         if (container != null) {
             container.init();
         }
 
-        // Initialize any Executors
+        // 初始化一定量的线程池
         for (Executor executor : findExecutors()) {
             if (executor instanceof JmxEnabled) {
                 ((JmxEnabled) executor).setDomain(getDomain());
@@ -559,9 +559,13 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
 
         // Initialize mapper listener
+        //会继承 LifecycleMBeanBase (说明对象的启动会被注册到jmx上面去)
+        //  实现 ContainerListener(说明既可以响应container的事件) 和 LifecycleListener(还可以响应组件的状态事件)
+        //  里面等级host对象
         mapperListener.init();
 
         // Initialize our defined Connectors
+        //init 连接器
         synchronized (connectorsLock) {
             for (Connector connector : connectors) {
                 try {

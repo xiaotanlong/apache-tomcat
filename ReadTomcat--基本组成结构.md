@@ -338,3 +338,11 @@ http://localhost:8080/wsota/wsota_index.jsp
 11)Host把HttpServletResponse对象返回给Engine
 12)Engine把HttpServletResponse对象返回给Connector
 13)Connector把HttpServletResponse对象返回给客户browser
+
+
+
+## 6 Tomcat学习之Wrapper
+
+Wrapper 代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。它的父容器一般是Context，Wrapper 是最底层的容器，它没有子容器了，所以调用它的 addChild 将会抛illegalargumentexception。Wrapper 的实现类是 StandardWrapper，StandardWrapper 还实现了拥有一个 Servlet 初始化信息的 ServletConfig，由此看出 StandardWrapper 将直接和 Servlet 的各种信息打交道。
+
+在StandardContext启动时，读取web.xml配置文件，配置Context之后，紧接着启动Context的一些附属组件，除此以外还加载了那些标记为"load on start"的那些wrapper

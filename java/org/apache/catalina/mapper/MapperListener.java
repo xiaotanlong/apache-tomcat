@@ -95,21 +95,20 @@ public class MapperListener extends LifecycleMBeanBase
         setState(LifecycleState.STARTING);
 
         @SuppressWarnings("deprecation")
-        Engine engine = (Engine) service.getContainer();
+        Engine engine = (Engine) service.getContainer();//获取当前service的container，其实也就是engine
         if (engine == null) {
             return;
         }
 
         findDefaultHost();
 
-        addListeners(engine);
+        addListeners(engine); //为engine添加listener,将listener都设置为当前
 
-        Container[] conHosts = engine.findChildren();
+        Container[] conHosts = engine.findChildren(); //获取这个engine所有的host
         for (Container conHost : conHosts) {
-            Host host = (Host) conHost;
+            Host host = (Host) conHost;//遍历engine下面的所有的host定义
             if (!LifecycleState.NEW.equals(host.getState())) {
-                // Registering the host will register the context and wrappers
-                registerHost(host);
+                registerHost(host);//登记host对象
             }
         }
     }
@@ -145,7 +144,7 @@ public class MapperListener extends LifecycleMBeanBase
     }
 
     // --------------------------------------------- Container Listener methods
-
+    //也就是有child加入，或者valve加入的时候会激活 的事件，这里会将child的listener也设置为当前
     @Override
     public void containerEvent(ContainerEvent event) {
 
@@ -506,14 +505,14 @@ public class MapperListener extends LifecycleMBeanBase
 
     /**
      * Add this mapper to the container and all child containers
-     *
+     *为container对象添加lister，都设置为当前
      * @param container
      */
     private void addListeners(Container container) {
-        container.addContainerListener(this);
-        container.addLifecycleListener(this);
+        container.addContainerListener(this);//将这个container对象的container事件的监听设置为当前对象
+        container.addLifecycleListener(this);//设置当前对象来监听状态事件
         for (Container child : container.findChildren()) {
-            addListeners(child);
+            addListeners(child);//同时将所有的子container的监听设置为当前对象
         }
     }
 
